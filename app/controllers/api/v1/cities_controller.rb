@@ -12,7 +12,7 @@ module Api
           render json: {
             status: 'SUCCESS',
             message: 'Successfully loaded cities',
-            data: @cities,
+            cities: @cities,
             per_page: per_page.to_i,
             total_data: @cities.count,
             current_page: params[:page].to_i || 0,
@@ -27,7 +27,7 @@ module Api
           render json: {
             status: 'SUCCESS',
             message: 'There are no cities registered on this page',
-            data: [],
+            cities: [],
             per_page: per_page.to_i,
             total_data: @cities.count,
             current_page: params[:page].to_i || 0,

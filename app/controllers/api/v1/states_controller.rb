@@ -8,11 +8,11 @@ module Api
         per_page = params[:per_page] || 10
         @states = State.all.paginate(page: params[:page], per_page: per_page)
 
-        if @states.length >= 1
+        if @states.length >= 0
           render json: {
             status: 'SUCCESS',
             message: 'Successfully loaded states',
-            data: @states,
+            states: @states,
             per_page: per_page.to_i,
             total_data: @states.count,
             current_page: params[:page].to_i || 0,
@@ -24,7 +24,7 @@ module Api
           render json: {
             status: 'SUCCESS',
             message: 'There are no states registered on this page',
-            data: [],
+            states: [],
             per_page: per_page.to_i,
             total_data: @states.count,
             current_page: params[:page].to_i || 0,
