@@ -5,9 +5,32 @@ module Api
 
       # GET /states
       def index
-        @states = State.all
+        per_page = params[:per_page] || 10
+        @states = State.all.paginate(page: params[:page], per_page: per_page)
 
-        render json: @states
+        if @states.length >= 1
+          render json: {
+            status: 'SUCCESS',
+            message: 'Successfully loaded states',
+            data: @states,
+            per_page: per_page.to_i,
+            total_data: @states.count,
+            current_page: params[:page].to_i || 0,
+            total_pages: @states.total_pages.to_i
+          }
+        else
+          per_page = 0
+          total_page = 0
+          render json: {
+            status: 'SUCCESS',
+            message: 'There are no states registered on this page',
+            data: [],
+            per_page: per_page.to_i,
+            total_data: @states.count,
+            current_page: params[:page].to_i || 0,
+            total_pages: @states.total_pages.to_i
+          }
+        end
       end
 
       # GET /states/1
@@ -20,7 +43,12 @@ module Api
         @state = State.new(state_params)
 
         if @state.save
-          render json: @state, status: :created, location: @state
+          render json: {
+            status: 'SUCCESS',
+            message: 'Saved Successfully',
+            data: @state,
+            location: api_v1_state_url(@state)
+          }
         else
           render json: @state.errors, status: :unprocessable_entity
         end
